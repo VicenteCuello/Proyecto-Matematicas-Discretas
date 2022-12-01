@@ -1,0 +1,9 @@
+8
+bianca 3 alder iris liza yes
+liza 3 bianca iris cheren no
+lucho 3 bianca cilan cheren no
+elesa 3 cheren cilan bianca yes
+cheren 3 bianca elesa cilan yes
+iris 3 liza elesa lucho no
+cilan 3 lucho iris bianca yes
+alder 3 cilan iris lucho no
