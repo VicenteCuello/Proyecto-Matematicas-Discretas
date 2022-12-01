@@ -8,7 +8,7 @@ typedef struct{
     char nombre[3];
 }pokeCiudad;
 
-int dijkstra(int **pokeMatriz, int n, int source, int target){
+int algortimo(int **pokeMatriz, int n){
     int coste[n][n];
     for(int i=0; i< n; i++){
         for(int j=0; j<n;j++){
@@ -19,48 +19,8 @@ int dijkstra(int **pokeMatriz, int n, int source, int target){
             }
         }
     }
-    int dist[n],prev[n];
-    int selected[n];
-    int i,m,min,start,d,j;
-    char path[n];
-    for(i=1;i< n;i++)
-    {
-        dist[i] = INFINITY;
-        prev[i] = -1;
-    }
-    start = source;
-    selected[start]=1;
-    dist[start] = 0;
-    while(selected[target] ==0){
-        min = INFINITY;
-        m = 0;
-        for(i=1;i< n;i++){
-            d = dist[start] +coste[start][i];
-            if(d< dist[i]&&selected[i]==0)
-            {
-                dist[i] = d;
-                prev[i] = start;
-            }
-            if(min>dist[i] && selected[i]==0)
-            {
-                min = dist[i];
-                m = i;
-            }
-        }
-        start = m;
-        selected[start] = 1;
-    }
-    start = target;
-    j = 0;
-    while(start != -1)
-    {
-        path[j++] = start+65;
-        start = prev[start];
-    }
-    path[j]='\0';
-    strrev(path);
-    printf("%s", path);
-    return dist[target];
+
+    
 
 }
 
@@ -94,11 +54,10 @@ fscanf(f,"%d",&numRecorridos);
 for(int i=0; i<numRecorridos; i++){
     int n;
     int m;
-    int iv;
+    int entrenadores;
     char MT[3];
     char MO[3];
-    fscanf(f,"%s %s %d",&MT,&MO,&iv);
-    printf("%s %s %d\n",MT,MO,iv);
+    fscanf(f,"%s %s %d",&MT,&MO,&entrenadores);
     bool lector = false;
     while(lector == false){
         for (int i = 0; i < numCiudades; i++){
@@ -113,7 +72,7 @@ for(int i=0; i<numRecorridos; i++){
                 lector = true;
             }
         }
-        mundopokemon[n][m]= iv;
+        mundopokemon[n][m]= entrenadores;
     }
 }
 for(int i=0;i<numCiudades;i++){
@@ -123,9 +82,6 @@ for(int i=0;i<numCiudades;i++){
         }
     }
 }
-
-int co = dijkstra(mundopokemon,numCiudades,0,19);
-printf("\nThe Shortest Path: %d",co);
 
     fclose(f);
     system("pause");
