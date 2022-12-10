@@ -114,18 +114,18 @@ public class Tarjan {
 
  
 
-    CodigoTarjan x = new CodigoTarjan(grafo);
+        CodigoTarjan x = new CodigoTarjan(grafo);
 
-    int[] ar = x.obtenerVertice();
-    Map<Integer, List<Integer>> mapa = new HashMap<>();
-    for (int i=0; i<n; i++) {
-      if (!mapa.containsKey(ar[i])) mapa.put(ar[i], new ArrayList<>());
-      mapa.get(ar[i]).add(i);
-    }
-    System.out.printf("Número de componentes fuertemente conectados: %d\n", x.contador());
-    for (List<Integer> scc : mapa.values()) {
-      System.out.println("Vertices: " + scc + " que forman un componente fuertemente conectado.");
-    }
-    }
+        int[] ar = x.obtenerVertice();
+        Map<Integer, List<Integer>> mapa = new HashMap<>();
+        for (int i=0; i<n; i++) {
+          if (!mapa.containsKey(ar[i])) mapa.put(ar[i], new ArrayList<>());
+          mapa.get(ar[i]).add(i);
+        }
+        System.out.printf("Numero de componentes fuertemente conectados: %d\n", x.contador());
+        for (List<Integer> scc : mapa.values()) {
+          System.out.println("Vertices: " + scc + " que forman un componente fuertemente conectado.");
+        }
+        }
     
 }
