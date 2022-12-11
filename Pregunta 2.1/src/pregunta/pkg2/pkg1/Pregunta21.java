@@ -7,11 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 class Ciudad{
-    String name;
-    int number;
+    public String name;
+    public int number;
     public Ciudad(String s, int n){
         name = s;
         number = n;
@@ -19,63 +18,48 @@ class Ciudad{
 }
 
 public class Pregunta21 {
-
-    public static void calculePath(int[][] path, int start, int end, ArrayList<Integer> ruta){
-        if(path[start][end] == start){
-            return;
-        }
-        calculePath(path, start, path[start][end], ruta);
-        ruta.add(path[start][end]);
-    }
     
-    public static void FloydWarshall(int[][] weight, ArrayList<Ciudad> Pueblos, int[] mainPath){
-        int n = weight.length;
-        int[][] cost = new int[n][n];
-        int[][] path = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                cost[i][j] = weight[i][j];
-                if(i == j){
-                    path[i][j] = 0;
-                }else{
-                    if(cost[i][j] != Integer.MAX_VALUE){
-                        path[i][j] = i;
-                    }else{
-                        path[i][j] = -1;
+    public static void Floyd_Warshall(int[][] weight,int[][] paths, ArrayList<Ciudad> Pueblos, int[] mainPath){
+        int vNumber = weight.length;
+        for (int k = 0; k < vNumber; ++k) {
+            for (int i = 0; i < vNumber; ++i) {
+                for (int j = 0; j < vNumber; ++j) {
+                    if (weight[i][k] + weight[k][j] < weight[i][j] && weight[i][k] != Integer.MAX_VALUE && weight[k][j] != Integer.MAX_VALUE){
+                        weight[i][j] = weight[i][k] + weight[k][j];
+                        paths[i][j] = paths[k][j];
                     }
                 }
             }
         }
-        for (int k = 0; k < n; ++k) {
-            for (int i = 0; i < n; ++i) {
-                for (int j = 0; j < n; ++j) {
-                    if (cost[i][k] + cost[k][j] < cost[i][j] && cost[i][k] != Integer.MAX_VALUE && cost[k][j] != Integer.MAX_VALUE){
-                        cost[i][j] = cost[i][k] + cost[k][j];
-                        path[i][j] = path[k][j];
-                    }
-                }
-            }
-        }
-        int size = mainPath.length;
-        ArrayList<Integer> result = new ArrayList<>();
+        int pthVertex = mainPath.length;
+        ArrayList<Integer> finalPath = new ArrayList<>();
         System.out.println("El camino mas corto en orden seria el siguiente:");
-        for (int i = 0; i < size-1; i++) {
+        for (int i = 0; i < pthVertex-1; i++) {
+            ArrayList<Integer> auxPath = new ArrayList<>();
+            int start = mainPath[i];
+            int end = mainPath[i+1];
             for (int j = 0; j < Pueblos.size(); j++) {
                 if(mainPath[i] == Pueblos.get(j).number){
-                    result.add(Pueblos.get(j).number);
+                    finalPath.add(Pueblos.get(j).number);
                 }
             }
-            calculePath(path, mainPath[i], mainPath[i+1], result);
+            while(paths[start][end] != start){
+                auxPath.add(paths[start][end]);
+                end = paths[start][end];
+            }
+            for (int k = 0; k < auxPath.size(); k++) {
+                finalPath.add(auxPath.get(auxPath.size()-1-k));
+            }
         }
-        for (int i = 0; i < result.size(); i++) {
+        for (int i = 0; i < finalPath.size(); i++) {
             for (int j = 0; j < Pueblos.size(); j++) {
-                if(result.get(i) == Pueblos.get(j).number){
+                if(finalPath.get(i) == Pueblos.get(j).number){
                     System.out.print(Pueblos.get(j).name+"->");
                 }
             }
         }
         for (int j = 0; j < Pueblos.size(); j++) {
-            if(mainPath[size-1] == Pueblos.get(j).number){
+            if(mainPath[pthVertex-1] == Pueblos.get(j).number){
                 System.out.print(Pueblos.get(j).name+"\n");
             }
         }
@@ -90,6 +74,7 @@ public class Pregunta21 {
         int numCiudades = Integer.valueOf(br.readLine());
         ArrayList<Ciudad> Towns = new ArrayList<>();
         int[][] mundoPokemon = new int[numCiudades][numCiudades];
+        int[][] paths = new int[numCiudades][numCiudades];
         ArrayList<Integer> result = new ArrayList<>();
         
         for (int i = 0; i < numCiudades; i++) {
@@ -125,6 +110,20 @@ public class Pregunta21 {
             mundoPokemon[n][m] = Integer.valueOf(line[2]);
             mundoPokemon[m][n] = Integer.valueOf(line[2]);
         }
+        
+        for (int i = 0; i < numCiudades; i++) {
+            for (int j = 0; j < numCiudades; j++) {
+                if(i == j){
+                    paths[i][j] = 0;
+                }else{
+                    if(mundoPokemon[i][j] != Integer.MAX_VALUE){
+                        paths[i][j] = i;
+                    }else{
+                        paths[i][j] = -1;
+                    }
+                }
+            }
+        }
        
         int camino = Integer.valueOf(br.readLine());
         int[] mainPath = new int[camino];
@@ -136,6 +135,6 @@ public class Pregunta21 {
                 }
             }
         }
-        FloydWarshall(mundoPokemon, Towns, mainPath);
+        Floyd_Warshall(mundoPokemon,paths, Towns, mainPath);
     }
 }
